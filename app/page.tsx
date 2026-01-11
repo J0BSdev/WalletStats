@@ -27,54 +27,62 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-text-primary mb-2">WalletStats</h1>
-          <p className="text-xs text-text-secondary uppercase tracking-wider">
-            Read-only. No transactions.
-          </p>
-        </div>
-        
-        <div className="space-y-3">
-          <button
-            onClick={() => handleConnect('metamask')}
-            className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors"
-          >
-            Connect Wallet (MetaMask)
-          </button>
-          
-          <button
-            onClick={() => handleConnect('walletconnect')}
-            className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors"
-          >
-            Connect Wallet (WalletConnect)
-          </button>
-          
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border"></div>
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="px-2 bg-bg text-text-secondary uppercase tracking-wider">OR</span>
-            </div>
+      <div className="max-w-md w-full flex flex-col min-h-screen">
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-text-primary mb-1">WalletStats</h1>
+            <p className="text-sm text-text-secondary">
+              See how you really trade
+            </p>
           </div>
           
           <div className="space-y-3">
-            <input
-              type="text"
-              placeholder="Paste wallet address (view-only)"
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-              className="w-full px-4 py-3 border border-border bg-surface text-text-primary text-sm focus:outline-none focus:border-accent placeholder:text-text-secondary"
-            />
             <button
-              onClick={() => handleConnect('manual')}
-              disabled={!walletAddress.trim()}
-              className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              onClick={() => handleConnect('metamask')}
+              className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors"
             >
-              Analyze Wallet
+              Connect Wallet (MetaMask)
             </button>
+            
+            <button
+              onClick={() => handleConnect('walletconnect')}
+              className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors"
+            >
+              Connect Wallet (WalletConnect)
+            </button>
+            
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-2 bg-bg text-text-secondary uppercase tracking-wider">OR</span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder="Paste wallet address (view-only)"
+                value={walletAddress}
+                onChange={(e) => setWalletAddress(e.target.value)}
+                className="w-full px-4 py-3 border border-border bg-surface text-text-primary text-sm focus:outline-none focus:border-accent placeholder:text-text-secondary"
+              />
+              <button
+                onClick={() => handleConnect('manual')}
+                disabled={!walletAddress.trim()}
+                className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Analyze Wallet
+              </button>
+            </div>
           </div>
+        </div>
+        
+        <div className="pb-6 text-center">
+          <p className="text-xs text-text-secondary">
+            Read-only. No transactions.
+          </p>
         </div>
       </div>
     </div>

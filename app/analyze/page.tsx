@@ -39,10 +39,11 @@ export default function AnalyzePage() {
 
   return (
     <div className="min-h-screen bg-bg px-4 py-6 max-w-6xl mx-auto">
-      <div className="mb-6 flex items-center justify-between pb-4 border-b border-border">
+      <div className="mb-6 flex items-start justify-between pb-4 border-b border-border">
         <div>
           <h1 className="text-xl font-semibold text-text-primary">WalletStats</h1>
-          <div className="text-xs text-text-secondary mt-1">Personal wallet performance analysis</div>
+          <div className="text-sm text-text-secondary mt-1">See how you really trade</div>
+          <div className="text-xs text-text-secondary mt-2">Read-only. No transactions.</div>
         </div>
         <div className="flex gap-2">
           <Link
