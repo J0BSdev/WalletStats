@@ -92,3 +92,18 @@ export interface WalletAnalysisData {
   behavior: BehaviorStats;
 }
 
+// API Response types
+export interface AnalysisCoverage {
+  txCount: number;
+  firstTx: number; // timestamp
+  lastTx: number; // timestamp
+  priceCoveragePct: number;
+  isStub: boolean; // true if using deterministic stub
+}
+
+export interface AnalysisResponse {
+  asOf: number; // timestamp
+  coverage: AnalysisCoverage;
+  data: WalletAnalysisData;
+}
+

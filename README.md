@@ -28,12 +28,22 @@ Personal wallet performance and behavior insights - a clean, minimal MVP fronten
 npm install
 ```
 
-2. Run development server:
+2. (Optional) Set up WalletConnect for wallet connection:
+   - Get a Project ID from [https://cloud.walletconnect.com](https://cloud.walletconnect.com)
+   - Create a `.env.local` file in the project root:
+     ```
+     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
+     ```
+   - Without this, wallet connection buttons won't appear, but you can still paste addresses
+
+3. Run development server:
 ```bash
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000)
+4. Open [http://localhost:3000](http://localhost:3000)
+
+**Note:** The app works without WalletConnect - you can always paste a wallet address to analyze it.
 
 ## Project Structure
 

@@ -1,29 +1,58 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
+import { isAddress, normalizeAddress, saveAddress } from '@/lib/address';
 
 export default function LandingPage() {
   const [walletAddress, setWalletAddress] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
+  const { address: connectedAddress, isConnected } = useAccount();
 
-  const handleConnect = (provider: 'metamask' | 'walletconnect' | 'manual') => {
-    if (provider === 'manual') {
-      if (walletAddress.trim()) {
-        // Store wallet address (in real app, use context or state management)
-        localStorage.setItem('walletAddress', walletAddress.trim());
-        router.push('/analyze');
-      }
-    } else {
-      // Placeholder for MetaMask/WalletConnect integration
-      // In real app, implement wallet connection logic here
-      const mockAddress = '0x' + Array.from({ length: 40 }, () => 
-        Math.floor(Math.random() * 16).toString(16)
-      ).join('');
-      localStorage.setItem('walletAddress', mockAddress);
-      router.push('/analyze');
+  const handlePasteAddress = () => {
+    setError('');
+    const trimmed = walletAddress.trim();
+    
+    if (!trimmed) {
+      setError('Address is required');
+      return;
+    }
+
+    if (!isAddress(trimmed)) {
+      setError('Invalid address');
+      return;
+    }
+
+    try {
+      const normalized = normalizeAddress(trimmed);
+      saveAddress(normalized);
+      router.push(`/app/loading?address=${normalized}`);
+    } catch (err) {
+      setError('Invalid address format');
     }
   };
+
+  const handleWalletConnected = async () => {
+    if (connectedAddress) {
+      try {
+        const normalized = normalizeAddress(connectedAddress);
+        saveAddress(normalized);
+        router.push(`/app/loading?address=${normalized}`);
+      } catch (err) {
+        setError('Invalid wallet address');
+      }
+    }
+  };
+
+  // Use effect to handle wallet connection
+  useEffect(() => {
+    if (isConnected && connectedAddress) {
+      handleWalletConnected();
+    }
+  }, [isConnected, connectedAddress]);
 
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
@@ -37,19 +66,9 @@ export default function LandingPage() {
           </div>
           
           <div className="space-y-3">
-            <button
-              onClick={() => handleConnect('metamask')}
-              className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors"
-            >
-              Connect Wallet (MetaMask)
-            </button>
-            
-            <button
-              onClick={() => handleConnect('walletconnect')}
-              className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors"
-            >
-              Connect Wallet (WalletConnect)
-            </button>
+            <div className="flex justify-center">
+              <ConnectButton />
+            </div>
             
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
@@ -61,21 +80,43 @@ export default function LandingPage() {
             </div>
             
             <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="Paste wallet address (view-only)"
-                value={walletAddress}
-                onChange={(e) => setWalletAddress(e.target.value)}
-                className="w-full px-4 py-3 border border-border bg-surface text-text-primary text-sm focus:outline-none focus:border-accent placeholder:text-text-secondary"
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Paste wallet address (view-only)"
+                  value={walletAddress}
+                  onChange={(e) => {
+                    setWalletAddress(e.target.value);
+                    setError('');
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handlePasteAddress();
+                    }
+                  }}
+                  className="w-full px-4 py-3 border border-border bg-surface text-text-primary text-sm focus:outline-none focus:border-accent placeholder:text-text-secondary"
+                />
+                {error && (
+                  <p className="mt-1 text-xs text-negative">{error}</p>
+                )}
+              </div>
               <button
-                onClick={() => handleConnect('manual')}
+                onClick={handlePasteAddress}
                 disabled={!walletAddress.trim()}
                 className="w-full px-4 py-3 bg-surface border border-border text-text-primary text-sm hover:border-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Analyze Wallet
               </button>
             </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <a
+              href="/app/demo"
+              className="text-xs text-text-secondary hover:text-text-primary transition-colors"
+            >
+              View demo mode
+            </a>
           </div>
         </div>
         
@@ -88,4 +129,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
