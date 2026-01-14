@@ -2,7 +2,7 @@
 
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwin utilities;
 
 @layer base {
   body {
